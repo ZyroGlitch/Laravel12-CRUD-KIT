@@ -40,12 +40,24 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'Cashier',
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return to_route('dashboard');
+        $role = Auth::user()->role ?? null;
+
+        if ($role === 'Branch Manager') {
+            return redirect()->intended(route('dashboard', [], false));
+        }
+
+        if ($role === 'Cashier') {
+            return redirect()->intended(route('cashier.dashboard', [], false));
+        }
+
+        // If the authenticated user does not have a valid role, go back with an error message.
+        return redirect()->back()->withErrors(['role' => 'Invalid user role.']);
     }
 }
