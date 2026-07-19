@@ -14,7 +14,6 @@ Route::middleware(['auth', 'is_branch_manager'])->group(function () {
 
 Route::middleware(['auth', 'is_cashier'])->group(function () {
     Route::inertia('cashier', 'Cashier/Dashboard')->name('cashier.dashboard');
-
 });
 
 require __DIR__ . '/settings.php';
