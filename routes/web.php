@@ -1,19 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
+Route::inertia('/', 'welcome')->name('home');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
 
+Route::middleware(['auth', 'is_branch_manager'])->group(function () {
+    Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::inertia('employees', 'Employees/Dashboard')->name('employees.dashboard');
     Route::inertia('salary', 'Salary/Dashboard')->name('salary.dashboard');
+});
+
+
+Route::middleware(['auth', 'is_cashier'])->group(function () {
+    Route::inertia('cashier', 'Cashier/Dashboard')->name('cashier.dashboard');
 
 });
 

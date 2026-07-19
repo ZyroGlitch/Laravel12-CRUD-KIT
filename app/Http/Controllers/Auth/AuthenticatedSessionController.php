@@ -33,7 +33,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = Auth::user();
+        if($user->role === 'Branch Manager'){
+            return redirect()->intended(route('dashboard', absolute: false));
+        } else if($user->role === 'Cashier'){
+            return redirect()->intended(route('cashier.dashboard', absolute: false));
+        }
+        
+        // If the authenticated user does not a valid role, it will back to login page with an error message
+        return redirect()->back()->withErrors(['role' => 'Invalid user role.']);
     }
 
     /**
